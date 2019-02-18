@@ -10,6 +10,10 @@
     "JResponse",
     "NodeJS/ExpressJS API Response"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alancieri/jresponse-node"
+  },
   "author": "Alessandro Lancieri",
   "license": "ISC",
   "dependencies": {
