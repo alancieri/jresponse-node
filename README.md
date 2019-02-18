@@ -31,7 +31,7 @@ async list (req, res) {
   }
 ```
 
-#### Output
+### Output
 
 the JRes object will return always the same output: **success**, **count**, **data**, and **errors**
 
@@ -54,26 +54,20 @@ the JRes object will return always the same output: **success**, **count**, **da
     "errors": []
 }
 ```
-**success**: (_boolean) true or false. True if there is not errors.
+- **success**: (_boolean) true or false. True if there is not errors.
+- **count** (_integer_). The size of data array.
+- **data** (_array_). The data expected from request. If there are errors, it will be empty.
+- **errors** (_array_). The errors occurred in the request. If there are some errors, success will be false.
 
-**count** (_integer_). The size of data array.
+### Methods
 
-**data** (_array_). The data expected from request. If there are errors, it will be empty.
+- **res.JRes.sendSuccess**(_data_). Short success output, it will call the _sendResponse_ method with success as _true_
+- **res.JRes.sendErrors**(_message_ [, _code_]). Short error output, it will call the _sendResponse_ method with success as _false_
+- **res.JRes.appendError**(_message_ [, _code_]). Append the current error message to the JRes object, and will set the currect error code.
+- **res.JRes.sendResponse**(_success_, _data_, _errors_). Final methd to get the output. You can also use this method in place of the previous ones
 
-**errors** (_array_). The errors occurred in the request. If there are some errors, success will be false.
-
-#### Methods
-
-**res.JRes.sendSuccess**(_data_). Short success output, it will call the _sendResponse_ method with success as _true_
-
-**res.JRes.sendErrors**(_message_ [, _code_]). Short error output, it will call the _sendResponse_ method with success as _false_
-
-**res.JRes.appendError**(_message_ [, _code_]). Append the current error message to the JRes object, and will set the currect error code.
-
-**res.JRes.sendResponse**(_success_, _data_, _errors_). Final methd to get the output. You can also use this method in place of the previous ones
-
-#### Use 'JRes' to get the JResponse without using the res Express object
-You can use th JRes in order to format the response, without use the 'res' Express route object. In this call, you can call JResponse statically
+### Use JResponse without using the res Express object
+You can use the JRes in order to format the response, without use the 'res' Express route object. In this call, you can call JResponse statically
 ```js
 import { MyModel } from '../models'
 
