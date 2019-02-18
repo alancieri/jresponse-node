@@ -47,6 +47,7 @@ async list2 (req, res) {
             "orderId": "849823662150",
             "orderRef": "15",
             "otherData": "data"
+        },
         { 
             "otherObjectData": "data" 
         }
