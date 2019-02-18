@@ -75,7 +75,7 @@ the JRes object will return always the same output: **success**, **count**, **da
 - **res.JRes.sendSuccess**(_data_). Short success output, it will call the _sendResponse_ method with success as _true_
 - **res.JRes.sendErrors**(_message_ [, _code_]). Short error output, it will call the _sendResponse_ method with success as _false_
 - **res.JRes.appendError**(_message_ [, _code_]). Append the current error message to the JRes object, and will set the currect error code.
-- **res.JRes.sendResponse**(_success_, _data_, _errors_). Final methd to get the output. You can also use this method in place of the previous ones
+- **res.JRes.sendResponse**(_success_, _data_, _errors_). You can use this method in place of the previous ones
 
 ### Use 'JRes' and pass it to 'res' Express object
 You can use the JRes in order to format the response, without use the 'res' Express route object. In this call, you can call JResponse statically
@@ -97,4 +97,10 @@ async list (req, res) {
     }
 }
 ```
+
+### Static Methods
+
+- **JResponse.success**(_data_). Short success output, it will call the _sendResponse_ method with success as _true_
+- **JResponse.errors**(_errors). Short error output, it will call the _sendResponse_ method with success as _false_
+- **JResponse.send**(_success_, _data_, _errors_). You can use this method in place of the previous ones
 

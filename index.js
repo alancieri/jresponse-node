@@ -21,7 +21,7 @@ class JResponse {
     return JResponse.send(true, data, [])
   }
 
-  static errors (errors) {
+  static errors (errors = []) {
     errors = (_.isArray(errors)) ? errors : [errors]
     return JResponse.send(false, [], errors)
   }
