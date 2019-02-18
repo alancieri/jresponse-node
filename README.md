@@ -46,9 +46,9 @@ async list2 (req, res) {
             "_channelId": "5c656fa71b66bc00096ced3d",
             "orderId": "849823662150",
             "orderRef": "15",
-            ...
+            "otherData": "data"
         { 
-            ... 
+            "otherObjectData": "data" 
         }
     ],
     "errors": []
