@@ -1,7 +1,7 @@
 {
   "name": "jresponse-node",
-  "version": "0.1.1",
-  "description": "Node/Express Standard Output for each API Request",
+  "version": "0.1.2",
+  "description": "Node/Express Standard Output for API Requests",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
