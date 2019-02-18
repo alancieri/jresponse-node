@@ -3,6 +3,12 @@
 Middleware for Node/Express. Use this middleware in order to get a standard output the API Request. 
 You can also use JResponse as a common javascript object to even your responses and send it to router response (see the last paragraph).  
 
+### Install
+
+```
+npm i jresponse-node
+```
+
 ### Usage
 
 #### Set the middleware (app.use() or router.use())
