@@ -4,7 +4,7 @@ Node/Express Standard Output for each API Request
 
 ### Usage
 
-```
+```js
 import { Order } from '../models'
 import JResponse from '../helpers/jresponse'
 
@@ -21,7 +21,7 @@ async list1 (req, res) {
 }
 ```
 
-```
+```js
 async list2 (req, res) {
     try {
         const orders = await Order.findAll()
@@ -36,7 +36,7 @@ async list2 (req, res) {
 
 ### Output
 
-```
+```json
 {
     "success": true,
     "count": 4,
