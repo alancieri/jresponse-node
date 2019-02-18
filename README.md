@@ -1,6 +1,7 @@
 # JResponse for Node
 
-Middleware for Node/Express. Use this middleware in order to get a standard output the API Request.
+Middleware for Node/Express. Use this middleware in order to get a standard output the API Request. 
+You can also use JResponse as a common javascript object to even your responses and send it to router response (see the last paragraph).  
 
 ### Usage
 
@@ -8,6 +9,8 @@ Middleware for Node/Express. Use this middleware in order to get a standard outp
 The module will append the formatted response to the res object of ExpressJS. 
 
 ```js
+// routes.js
+
 import { Router } from 'express'
 import MyController from './controllers/MyController'
 import { setJResponse } from 'jresponse-node'
@@ -20,9 +23,11 @@ router.route('/')
   .get((...args) => MyController.list(...args))
 ```
 
-#### Use 'JRes' to get the JResponse by the res Express object
+#### Use 'JRes' instead the 'res' object in Express
 
 ```js
+// MyController.js
+
 import { MyModel } from '../models'
 
 async list (req, res) {
@@ -66,10 +71,14 @@ the JRes object will return always the same output: **success**, **count**, **da
 - **res.JRes.appendError**(_message_ [, _code_]). Append the current error message to the JRes object, and will set the currect error code.
 - **res.JRes.sendResponse**(_success_, _data_, _errors_). Final methd to get the output. You can also use this method in place of the previous ones
 
-### Use JResponse without using the res Express object
+### Use 'JRes' and pass it to 'res' Express object
 You can use the JRes in order to format the response, without use the 'res' Express route object. In this call, you can call JResponse statically
+
 ```js
+// MyController.js
+
 import { MyModel } from '../models'
+import { JResponse } from 'jresponse-node'
 
 async list (req, res) {
     try {
