@@ -68,14 +68,14 @@ class JResponse {
 
   sendSuccess (data) {
     if (!_.isUndefined(data) && !_.isEmpty(data)) {
-      (_.isArray(data)) ? this.response.data.concat(data) : this.response.data.push(data)
+      (_.isArray(data)) ? this.response.data = this.response.data.concat(data) : this.response.data.push(data)
     }
     return this.sendResponse(true)
   }
 
   sendErrors (errors, code) {
     if (!_.isUndefined(errors) && !_.isEmpty(errors)) {
-      (_.isArray(errors)) ? this.response.errors.concat(errors) : this.response.errors.push(errors)
+      (_.isArray(errors)) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
     }
     this.response.success = false
     this.code = !_.isUndefined(code) ? code : 400
