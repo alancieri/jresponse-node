@@ -68,23 +68,25 @@ class JResponse {
 
   sendSuccess (data) {
     if (!_.isUndefined(data) && !_.isEmpty(data)) {
-      this.response.data = (_.isArray(data)) ? data : this.response.data.push(data)
+      (_.isArray(data)) ? this.response.data.concat(data) : this.response.data.push(data)
     }
-    return this.sendResponse(true, this.response.data)
+    return this.sendResponse(true)
   }
 
-  sendErrors (error, code) {
-    if (!_.isUndefined(error) && !_.isEmpty(error)) {
-      this.response.errors.push(error)
+  sendErrors (errors, code) {
+    if (!_.isUndefined(errors) && !_.isEmpty(errors)) {
+      (_.isArray(errors)) ? this.response.errors.concat(errors) : this.response.errors.push(errors)
     }
     this.response.success = false
     this.code = !_.isUndefined(code) ? code : 400
-    return this.sendResponse(false, [], this.response.errors)
+    return this.sendResponse(false)
   }
 
-  appendError (error, code) {
+  appendError (errors, code) {
+    if (!_.isUndefined(errors) && !_.isEmpty(errors)) {
+      (_.isArray(errors)) ? this.response.errors.concat(errors) : this.response.errors.push(errors)
+    }
     this.code = !_.isUndefined(code) ? code : 400
-    this.response.errors.push(error)
   }
 }
 

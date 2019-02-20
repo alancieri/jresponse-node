@@ -53,14 +53,16 @@ the JRes object will return always the same output: **success**, **count**, **da
     "data": [
         {
             "_id": "5c66b96f1b66bc00096ced46",
-            "_channelId": "5c656fa71b66bc00096ced3d",
-            "orderId": "849823662150",
-            "orderRef": "15",
+            "_otherId": "5c656fa71b66bc00096ced3d",
+            "itemId": "849823662150",
+            "itemRef": "15",
             "otherData": "data"
         },
         { 
-            "otherObjectData": "data" 
-        }
+            "_id": "5c66b96f1b66bc00096ced57",
+            ... 
+        },
+        ...
     ],
     "errors": []
 }
@@ -101,6 +103,6 @@ async list (req, res) {
 ### Static Methods
 
 - **JResponse.success**(_data_). Short success output, it will call the _sendResponse_ method with success as _true_
-- **JResponse.errors**(_errors). Short error output, it will call the _sendResponse_ method with success as _false_
+- **JResponse.errors**(_errors_). Short error output, it will call the _sendResponse_ method with success as _false_
 - **JResponse.send**(_success_, _data_, _errors_). You can use this method in place of the previous ones
 
