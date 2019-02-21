@@ -37,7 +37,6 @@ class JResponse {
   }
 
   sendResponse (success = true, data = [], errors = [], code = null) {
-
     data = (data === null) ? [] : data
     Array.isArray(data) ? this.response.data = this.response.data.concat(data) : this.response.data.push(data)
 
@@ -48,7 +47,7 @@ class JResponse {
       this.response.success = false
     }
 
-    this.code = (code !== null) ? code : this.code
+    this.code = (code !== undefined && code !== null) ? code : this.code
     this.response.count = this.response.data.length
     return this.res.status(this.code).send(this.response)
   }
@@ -56,7 +55,7 @@ class JResponse {
   sendSuccess (data, code) {
     data = (data === null) ? [] : data
     Array.isArray(data) ? this.response.data = this.response.data.concat(data) : this.response.data.push(data)
-    this.code = (code !== null) ? code : 200
+    this.code = (code !== undefined && code !== null) ? code : 200
     return this.sendResponse(true)
   }
 
@@ -64,14 +63,14 @@ class JResponse {
     errors = (errors === null) ? [] : errors
     Array.isArray(errors) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
     this.response.success = false
-    this.code = (code !== null) ? code : 400
+    this.code = (code !== undefined && code !== null) ? code : 400
     return this.sendResponse(false)
   }
 
   appendError (errors, code) {
     errors = (errors === null) ? [] : errors
     Array.isArray(errors) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
-    this.code = (code !== null) ? code : 400
+    this.code = (code !== undefined && code !== null) ? code : 400
     return true
   }
 }
