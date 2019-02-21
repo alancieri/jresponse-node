@@ -1,5 +1,3 @@
-var _ = require('underscore-node');
-
 const setJResponse = () => {
   return (req, res, next) => {
     res.JRes = new JResponse(res)
@@ -10,86 +8,73 @@ const setJResponse = () => {
 class JResponse {
   constructor (res) {
     this.res = res
-    this.code = 200
+    this.code = null
     this.response = {
       success: true, count: 0, data: [], errors: []
     }
   }
 
   static success (data = []) {
-    data = (_.isArray(data)) ? data : [data]
+    data = (Array.isArray(data)) ? data : [data]
     return JResponse.send(true, data, [])
   }
 
   static errors (errors = []) {
-    errors = (_.isArray(errors)) ? errors : [errors]
+    errors = (Array.isArray(errors)) ? errors : [errors]
     return JResponse.send(false, [], errors)
   }
 
-  static send (success, data, errors) {
-    let response = { success: true, count: 0, data: [], errors: [] }
-    if (!_.isEmpty(errors)) {
-      response.success = false
-      response.errors = errors
-    }
-    if (!_.isEmpty(data)) {
-      response.data = data
-      response.count = response.data.length
-    }
+  static send (success = true, data = [], errors = []) {
+    data = (data === null) ? [] : data
+    data = (Array.isArray(data)) ? data : [data]
+
+    errors = (errors === null) ? [] : errors
+    errors = (Array.isArray(errors)) ? errors : [errors]
+
+    let response = { success: true, count: data.length, data: data, errors: errors }
+    response.success = !!(errors.length == 0)
     return response
   }
 
-  sendResponse (success, data, errors) {
-    if (_.isUndefined(this.code)) { this.code = 200 }
-    if (_.isUndefined(this.response)) { this.response = { success: true, count: 0, data: [], errors: [] } }
-    if (!_.isUndefined(errors) && !_.isEmpty(errors)) {
+  sendResponse (success = true, data = [], errors = [], code = null) {
+
+    data = (data === null) ? [] : data
+    Array.isArray(data) ? this.response.data = this.response.data.concat(data) : this.response.data.push(data)
+
+    errors = (errors === null) ? [] : errors
+    Array.isArray(errors) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
+
+    if (this.response.errors.length > 0) {
       this.response.success = false
-      this.code = 400
-      if (!_.isArray(errors)) {
-        this.response.errors.push(errors)
-      } else {
-        this.response.errors = errors
-      }
     }
-    if (!_.isUndefined(data) && !_.isEmpty(data)) {
-      if (!_.isArray(data)) {
-        this.response.data.push(data)
-      } else {
-        this.response.data = data
-      }
-    }
+
+    this.code = (code !== null) ? code : this.code
     this.response.count = this.response.data.length
-    if (!_.isUndefined(this.res)) {
-      return this.res.status(this.code).send(this.response)
-    } else {
-      return this.response
-    }
+    return this.res.status(this.code).send(this.response)
   }
 
-  sendSuccess (data) {
-    if (!_.isUndefined(data) && !_.isEmpty(data)) {
-      (_.isArray(data)) ? this.response.data = this.response.data.concat(data) : this.response.data.push(data)
-    }
+  sendSuccess (data, code) {
+    data = (data === null) ? [] : data
+    Array.isArray(data) ? this.response.data = this.response.data.concat(data) : this.response.data.push(data)
+    this.code = (code !== null) ? code : 200
     return this.sendResponse(true)
   }
 
   sendErrors (errors, code) {
-    if (!_.isUndefined(errors) && !_.isEmpty(errors)) {
-      (_.isArray(errors)) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
-    }
+    errors = (errors === null) ? [] : errors
+    Array.isArray(errors) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
     this.response.success = false
-    this.code = !_.isUndefined(code) ? code : 400
+    this.code = (code !== null) ? code : 400
     return this.sendResponse(false)
   }
 
   appendError (errors, code) {
-    if (!_.isUndefined(errors) && !_.isEmpty(errors)) {
-      (_.isArray(errors)) ? this.response.errors.concat(errors) : this.response.errors.push(errors)
-    }
-    this.code = !_.isUndefined(code) ? code : 400
+    errors = (errors === null) ? [] : errors
+    Array.isArray(errors) ? this.response.errors = this.response.errors.concat(errors) : this.response.errors.push(errors)
+    this.code = (code !== null) ? code : 400
+    return true
   }
 }
 
-module.exports.JResponse = JResponse;
-module.exports.setJResponse = setJResponse;
-
+module.exports.JResponse = JResponse
+module.exports.setJResponse = setJResponse

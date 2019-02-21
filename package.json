@@ -1,6 +1,6 @@
 {
   "name": "jresponse-node",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Node/Express Standard Output for API Requests",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,5 @@
   },
   "author": "Alessandro Lancieri",
   "license": "ISC",
-  "dependencies": {
-    "underscore-node": "^0.1.2"
-  }
+  "dependencies": {}
 }
