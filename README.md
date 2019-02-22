@@ -112,7 +112,7 @@ the JRes object will return always the same output: **success**, **count**, **da
 #### Customize the output
 
 - **res.JRes.merge**(_data_). Merge the data object passed to the function (_object_ or _array_) with the default JResponse object
-- **res.JRes.key**(_key_, _value_). Add the key and the value to the default JResponse object
+- **res.JRes.set**(_key_, _value_). Add the key and the value to the default JResponse object
 
 ```js
 res.JRes.merge([{ page: 1, }, { reference: '01REF999' }])
