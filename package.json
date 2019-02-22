@@ -1,6 +1,6 @@
 {
   "name": "jresponse-node",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Node/Express Standard Output for API Requests",
   "main": "index.js",
   "scripts": {

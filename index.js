@@ -73,6 +73,25 @@ class JResponse {
     this.code = (code !== undefined && code !== null) ? code : 400
     return true
   }
+
+  merge (list = []) {
+    list = (list === null) ? [] : list
+    list = !Array.isArray(list) ? [list] : list
+    if (list.length == 0) return false
+    for (const item of list)
+      for (var key in item)
+        if (item.hasOwnProperty(key))
+          this.set(key, item[key])
+  }
+
+  set (key, value) {
+    if (key === null || value === null
+      || key === undefined || value === undefined
+      || typeof key !== 'string') return false
+    this.response[key] = value
+    return true
+  }
+
 }
 
 module.exports.JResponse = JResponse
