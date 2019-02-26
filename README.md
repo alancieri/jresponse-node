@@ -1,10 +1,8 @@
 # JResponse for Node
 
-Middleware for Node/Express. Use this middleware in order to get a standard output for the API Request. 
-
-You can also use **JResponse** as a common javascript object to even your responses and send it to router response.
-
-When working with a large data set it obviously makes sense to offer pagination options to the endpoint. 
+Middleware for Node/Express. Use this middleware in order to get a standard output for the API Request.<br />
+You can also use **JResponse** as a common javascript object to even your responses and send it to router response.<br />
+When working with a large data set it obviously makes sense to offer pagination options to the endpoint.
 To avoid writing your own pagination output into every endpoint, JResponse provides you with the **JPagination** (see Pagination paragraph)
 
 ### Install
