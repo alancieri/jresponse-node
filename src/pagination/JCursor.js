@@ -5,10 +5,10 @@ class JCursor extends JPagination {
   constructor (req, options = {}) {
     super(req, options)
 
-    this.direction = 'next'
+    this.direction = 'before'
     this.order = -1
-    this.maxId = null
-    this.sinceId = null
+    this.before = null
+    this.after = null
     this.nextUrl = null
     this.prevUrl = null
     this.filter = null
@@ -17,11 +17,11 @@ class JCursor extends JPagination {
 
   build () {
     const query = this.req.query
-    this.maxId = (query.max_id !== undefined && query.max_id !== '') ? query.max_id : null
-    this.sinceId = (query.since_id !== undefined && query.since_id !== '') ? query.since_id : null
+    this.before = (query.before !== undefined && query.before !== '') ? query.before : null
+    this.after = (query.after !== undefined && query.after !== '') ? query.after : null
     this.filter = null
-    if (this.sinceId !== null) {
-      this.direction = 'prev'
+    if (this.after !== null) {
+      this.direction = 'after'
       this.order = 1
     }
 
@@ -33,20 +33,20 @@ class JCursor extends JPagination {
 
   displayFilter (cursorKey = 'id', dialect = 'nosql') {
 
-    this.filter = {}
+    this.currentFilter = {}
     let operator
     let value
 
-    if (this.maxId === null && this.sinceId === null)
-      return Object.assign(this.pagination, { filter: null})
+    if (this.before === null && this.after === null)
+      return Object.assign(this.pagination, { currentFilter: null })
 
-    if (this.maxId !== null && this.direction == 'next') {
+    if (this.before !== null && this.direction == 'before') {
       operator = '$lt'
-      value = this.maxId
+      value = this.before
     }
-    else if (this.sinceId !== null && this.direction == 'prev') {
+    else if (this.after !== null && this.direction == 'after') {
       operator = '$gt'
-      value = this.sinceId
+      value = this.after
     }
 
     let condition = {}
@@ -62,21 +62,21 @@ class JCursor extends JPagination {
       condition = operator.replace('$lt', '<').replace('$gt', '>') + ' ' + value
     }
 
-    this.filter[cursorKey] = condition
-    Object.assign(this.pagination, { filter: this.filter })
+    this.currentFilter[cursorKey] = condition
+    Object.assign(this.pagination, { currentFilter: this.currentFilter })
   }
 
-  set (maxId = null, sinceId = null) {
+  set (before = null, after = null) {
 
-    if (maxId !== null) { this.maxId = maxId }
-    if (sinceId !== null) { this.sinceId = sinceId }
+    if (before !== null) { this.before = before }
+    if (after !== null) { this.after = after }
 
-    if (this.maxId !== null) { this.nextUrl = this.replaceUrl({ 'max_id': this.maxId }) }
-    if (this.sinceId !== null) { this.prevUrl = this.replaceUrl({ 'since_id': this.sinceId }) }
+    if (this.before !== null) { this.nextUrl = this.replaceUrl({ 'before': this.before }) }
+    if (this.after !== null) { this.prevUrl = this.replaceUrl({ 'after': this.after }) }
 
     Object.assign(this.pagination, {
-      maxId: this.maxId,
-      sinceId: this.sinceId,
+      before: this.before,
+      after: this.after,
       limit: this.limit,
       direction: this.direction,
       order: this.order,

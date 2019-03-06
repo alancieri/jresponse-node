@@ -278,7 +278,7 @@ async function list (req, res) {
 	let direction = Cursor.direction
 
 	let items = await MyModel
-		.find(Cursor.filter, null, { sort: { '_id': Cursor.order } })
+		.find(Cursor.currentFilter, null, { sort: { '_id': Cursor.order } })
 		.select({})
 		.limit(Cursor.limit)
 		.exec()
@@ -286,13 +286,13 @@ async function list (req, res) {
 	if (items.length == 0)
 	return res.JRes.sendErrors('No data')
 	
-	if (Cursor.direction == 'prev') { items = items.reverse() }
+	if (Cursor.direction == 'after') { items = items.reverse() }
 	
 	// Update maxId and sinceId values
-	const maxId = items[events.length - 1]._id
-	const sinceId = items[0]._id
+	const beforeId = items[items.length - 1]._id
+	const afterId = items[0]._id
 	
-	return res.JRes.paginate(Cursor, maxId, sinceId).sendSuccess(events, 200)
+	return res.JRes.paginate(Cursor, beforeId, afterId).sendSuccess(events, 200)
 }
 
 ```
@@ -321,13 +321,13 @@ http://localhost:3000/items?limit=2
 	],
 	"errors": [],
 	"pagination": {
-		"maxId": "5c793543ac87ecc484832810",
-		"sinceId": "5c793547ac87ecc484832811",
+		"before": "5c793543ac87ecc484832810",
+		"after": "5c793547ac87ecc484832811",
 		"limit": 2,
-		"direction": "next",
+		"direction": "before",
 		"order": -1,
-		"nextUrl": "http://localhost:3001/items?limit=2&max_id=5c793543ac87ecc484832810",
-		"prevUrl": "http://localhost:3001/items?limit=2&max_id=5c793547ac87ecc484832811",
+		"nextUrl": "http://localhost:3001/items?limit=2&before=5c793543ac87ecc484832810",
+		"prevUrl": "http://localhost:3001/items?limit=2&after=5c793547ac87ecc484832811",
 		"filter": null
 	}
 }
@@ -353,13 +353,13 @@ If you move to the next url, the response will be the following
 	],
 	"errors": [],
 	"pagination": {
-		"maxId": "5c6add371f089800163ca368",
-		"sinceId": "5c74949673c56000137ef4f0",
+		"before": "5c6add371f089800163ca368",
+		"after": "5c74949673c56000137ef4f0",
 		"limit": 2,
-		"direction": "next",
+		"direction": "before",
 		"order": -1,
-		"nextUrl": "http://localhost:3001/events/1?limit=2&max_id=5c6add371f089800163ca368",
-		"prevUrl": "http://localhost:3001/events/1?limit=2&since_id=5c74949673c56000137ef4f0",
+		"nextUrl": "http://localhost:3001/events/1?limit=2&before=5c6add371f089800163ca368",
+		"prevUrl": "http://localhost:3001/events/1?limit=2&after=5c74949673c56000137ef4f0",
 		"filter": {
 			"_id": {
 				"$lt": "5c793543ac87ecc484832810"
