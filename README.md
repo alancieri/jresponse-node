@@ -328,7 +328,7 @@ http://localhost:3000/items?limit=2
 		"order": -1,
 		"nextUrl": "http://localhost:3001/items?limit=2&before=5c793543ac87ecc484832810",
 		"prevUrl": "http://localhost:3001/items?limit=2&after=5c793547ac87ecc484832811",
-		"filter": null
+		"currentFilter": null
 	}
 }
 ```
@@ -360,7 +360,7 @@ If you move to the next url, the response will be the following
 		"order": -1,
 		"nextUrl": "http://localhost:3001/events/1?limit=2&before=5c6add371f089800163ca368",
 		"prevUrl": "http://localhost:3001/events/1?limit=2&after=5c74949673c56000137ef4f0",
-		"filter": {
+		"currentFilter": {
 			"_id": {
 				"$lt": "5c793543ac87ecc484832810"
 			}
