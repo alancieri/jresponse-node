@@ -1,10 +1,12 @@
 # JResponse for Node
 
-Middleware for Node/Express. Use this middleware in order to get a standard output for the API Request.<br />
-You can also use **JResponse** as a common javascript object to even your responses and send it to router response.<br />
-When working with a large data set it obviously makes sense to offer pagination options to the endpoint.
-To avoid writing your own pagination output into every endpoint, JResponse provides you with the **JPagination** (see Pagination paragraph)
+Middleware for Node/Express. Use this middleware to get a standard output for the API Request.<br />
+You can also use **JResponse** as a simple object to standardize the Express router response.<br />
 
+When working with a large data set it obviously makes sense to offer pagination options to the endpoint.  
+To avoid writing your own pagination output into every endpoint, JResponse provides you **JPagination**.
+JPagination is inspired by the [Fractal Pagination](https://fractal.thephpleague.com/pagination "Pagination Fractal") for PHP, 
+and it offers two solution for paginate the response: **[JPaginator](#jpaginator)** and **[JCursor](#jcursor)**
 ### Install
 
 ```
@@ -175,18 +177,25 @@ async function list (req, res) {
 - **JResponse.errors**(_errors_). Short error output, it will call the _sendResponse_ method with success as _false_
 - **JResponse.send**(_success_, _data_, _errors_). You can use this method in place of the previous ones
 
-### Pagination (JPagination)
+### Pagination
 
-Pagination is the process of dividing content into pages.
-**JPagination** is an auto form of pagination, which will require the Request (the "req" object), and a total count of how much data is in the database. 
-This adds a "pagination" item to the response, which will contain next/previous links when applicable.
-Use the method **res.JRes.paginate(**_JPagination_**)** to append the pagination.
+Pagination is the process of dividing content into result-set and **JPagination** provides you with two solutions.
+
+#### JPaginator
+
+JPaginator is an auto form of pagination. TO perform the response it requires the Request object, and a total items count. 
+This adds a _pagination_ node to the response, which will contain next/previous links if applicable.
+Use the method **res.JRes.paginate(**<_JPagination_>**)** to append the pagination to JResponse.
+This intelligence comes at the cost of having to count the number of entries in a database on each call.
+
+For some data sets this might not be an issue, but for some it certainly will. 
+If pure speed is an issue, consider using **JCursors** instead.
 
 ```js
 // MyController.js
 
 import { MyModel } from '../models'
-import { JPagination } from 'jresponse-node'
+import { JPaginator } from 'jresponse-node'
 
 async function list (req, res) {
     const counter = await MyModel.findAndCountAll()
@@ -201,7 +210,7 @@ async function list (req, res) {
     }
     
     // Instantiate the pagination
-    let paging = new JPagination(req, totalItems, options)
+    let paging = new JPaginator(req, totalItems, options)
     
     const items = await MyModel.findAll({ limit: paging.limit, offset: paging.offset })
     
@@ -247,3 +256,145 @@ http://localhost:3000/test?limit=2&page=1
 - **metaKey**. Set the "pagination" key name for the JResponse object (default: "pagination") 
 - **limitKey**. Set the "limit" key name for the JPagination object. If you change this name you will change also the key in the querystring (default: "limit").  
 - **pageKey**. Set the "page" key name for the JPagination object. If you change this name you will change also the key in the querystring (default: "page").
+
+#### JCursor
+
+When we have large sets of data and running a _MyModel.findAndCountAll()_ isn't really an option, 
+we need a proper way of fetching results. 
+One of the approaches is to use cursors that will indicate to your backend where to start fetching results.
+It's really easy to use.
+
+```js
+// MyController.js
+
+import { MyModel } from '../models'
+import { JCursor } from 'jresponse-node'
+
+async function list (req, res) {
+    let Cursor = new JCursor(req)
+    
+    Cursor.displayFilter('_id', 'nosql')
+    
+	let direction = Cursor.direction
+
+	let items = await MyModel
+		.find(Cursor.filter, null, { sort: { '_id': Cursor.order } })
+		.select({})
+		.limit(Cursor.limit)
+		.exec()
+	
+	if (items.length == 0)
+	return res.JRes.sendErrors('No data')
+	
+	if (Cursor.direction == 'prev') { items = items.reverse() }
+	
+	// Update maxId and sinceId values
+	const maxId = items[events.length - 1]._id
+	const sinceId = items[0]._id
+	
+	return res.JRes.paginate(Cursor, maxId, sinceId).sendSuccess(events, 200)
+}
+
+```
+
+For example, you can call the following address and see the output. 
+
+```
+http://localhost:3000/items?limit=2
+```
+
+```json
+{
+	"success": true,
+	"count": 2,
+	"data": [
+		{
+			"_id": "5c793547ac87ecc484832811",
+			"timestamp": "1551144090433",
+			"name": "John"
+		},
+		{
+			"_id": "5c793543ac87ecc484832810",
+			"timestamp": "1551144090433",
+			"name": "Mark"
+		}
+	],
+	"errors": [],
+	"pagination": {
+	"maxId": "5c793543ac87ecc484832810",
+	"sinceId": "5c793547ac87ecc484832811",
+	"limit": 2,
+	"direction": "next",
+	"order": -1,
+	"nextUrl": "http://localhost:3001/items?limit=2&max_id=5c793543ac87ecc484832810",
+	"prevUrl": "http://localhost:3001/items?limit=2&max_id=5c793547ac87ecc484832811",
+	"filter": null
+	}
+}
+```
+
+If you move to the next url, the response will be the following
+
+```json
+{
+	"success": true,
+	"count": 2,
+	"data": [
+		{
+		"_id": "5c74949673c56000137ef4f0",
+		"timestamp": "1551144090433",
+		"name": "Robert"
+		},
+		{
+		"_id": "5c6add371f089800163ca368",
+		"timestamp": "1550507318112",
+		"name": "Grete"
+		}
+	],
+	"errors": [],
+	"pagination": {
+		"maxId": "5c6add371f089800163ca368",
+		"sinceId": "5c74949673c56000137ef4f0",
+		"limit": 2,
+		"direction": "next",
+		"order": -1,
+		"nextUrl": "http://localhost:3001/events/1?limit=2&max_id=5c6add371f089800163ca368",
+		"prevUrl": "http://localhost:3001/events/1?limit=2&since_id=5c74949673c56000137ef4f0",
+		"filter": {
+			"_id": {
+				"$lt": "5c793543ac87ecc484832810"
+			}
+		}
+	}
+}
+```
+
+##### Methods
+- **displayFilter**([_id_] [, _dialect_]). Display the filter node in pagination object response. 
+You can use the returned value to set the query filter automatically. 
+Set the _id_ with the identifier key for your collection (default "id")
+Choose the proper _dialect_ for your database between "nosql", "sql", "plain" (default "nosql").
+
+Output for **nosql**
+```
+"filter": {
+	"_id": {
+		"$lt": "5c793543ac87ecc484832810"
+	}
+}
+```
+Output for **sql**
+```
+"filter": {
+	"_id": "< 5c793543ac87ecc484832810"
+}
+```
+Output for **plain**
+```
+"filter": {
+	"_id": "less than 5c793543ac87ecc484832810"
+}
+```
+##### Options
+
+The same of JPaginator
