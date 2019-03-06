@@ -358,8 +358,8 @@ If you move to the next url, the response will be the following
 		"limit": 2,
 		"direction": "before",
 		"order": -1,
-		"nextUrl": "http://localhost:3001/events/1?limit=2&before=5c6add371f089800163ca368",
-		"prevUrl": "http://localhost:3001/events/1?limit=2&after=5c74949673c56000137ef4f0",
+		"nextUrl": "http://localhost:3001/items/1?limit=2&before=5c6add371f089800163ca368",
+		"prevUrl": "http://localhost:3001/items/1?limit=2&after=5c74949673c56000137ef4f0",
 		"currentFilter": {
 			"_id": {
 				"$lt": "5c793543ac87ecc484832810"
