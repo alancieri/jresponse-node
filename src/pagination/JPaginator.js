@@ -16,6 +16,7 @@ class JPaginator extends JPagination {
 
     if (page >= pages) { page = pages }
     if (page <= 1) { page = 1 }
+    this.total = total
     this.page = page
     this.pages = pages
     this.offset = this.limit * (this.page - 1)
@@ -25,7 +26,7 @@ class JPaginator extends JPagination {
 
   set () {
     this.pagination = {
-      limit: this.limit, offset: this.offset, page: this.page, pages: this.pages,
+      total: this.total, limit: this.limit, offset: this.offset, page: this.page, pages: this.pages,
       start: this.urls.start, prev: this.urls.prev, next: this.urls.next, last: this.urls.last
     }
     return this
