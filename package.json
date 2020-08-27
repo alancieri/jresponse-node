@@ -1,5 +1,5 @@
 {
-  "name": "jresponse-node",
+  "name": "@alancieri/jresponse-node",
   "version": "0.4.7",
   "description": "Node/Express Standard Output for API Requests",
   "main": "index.js",
