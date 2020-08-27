@@ -30,8 +30,7 @@ const router = new Router()
 
 router.use(setJResponse())
 
-router.route('/')
-  .get((...args) => MyController.list(...args))
+router.route('/').get((...args) => MyController.list(...args))
 ```
 
 ##### ES5
